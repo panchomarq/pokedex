@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- minify -->
+    <link
+      href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css"
+      rel="stylesheet"
+    />
+    <!-- latest -->
+    <link
+      href="https://unpkg.com/nes.css@latest/css/nes.min.css"
+      rel="stylesheet"
+    />
+    <!-- core style only -->
+    <link
+      href="https://unpkg.com/nes.css/css/nes-core.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+    <title>Document</title>
+  </head>
+  <body>
+    <span class="nes-text is-primary">Pokebitech</span>
+
+    <label for="pageLenghtSelect">Tamano page</label>
+    <div class="nes-select">
+      <select required id="pageLenghtSelect">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+      </select>
+    </div>
+
+    <div class="nes-container with-title is-centered">
+      <div class="nes-table-responsive">
+        <table class="nes-table is-bordered is-centered">
+          <thead>   
+            <tr>
+              <th class="Table. is-bordered">Nombre</th>
+              <th class="Table. is-centered">Numero</th>
+              <th>Tipo 1</th>
+              <th>Tipo 2</th>
+              <th>def</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      let tableBody = document.getElementById("tbody");
+      console.log(tableBody.innerHTML);
+
+      let lenghtSelect = document.getElementById("pageLenghtSelect");
+
+      lenghtSelect.addEventListener("change", (event, ele) => {
+        console.log(event.target.value);
+        listLenght = event.target.value;
+        preprocessData(pokemones);
+      });
+
+      let listLenght = 5;
+      let begin = 0;
+
+      let pokemones;
+      const pokedex =
+        "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/pokedex.json";
+
+      function preprocessData(data) {
+        // Rrecibe una lista de todos los pokemones y los dibuja utilizando drawPokemon
+        pokemones = data;
+        let end = begin + listLenght;
+        let pokefiltrados = pokemones.filter((value, index) => {
+          return (index >= begin) & (index < end);
+        });
+        tableBody.innerHTML = "";
+        pokefiltrados.map(drawPokemon);
+      }
+
+      function drawPokemon(pokemon) {
+        tableBody.innerHTML =
+          tableBody.innerHTML +
+          "<tr>" +
+          "<td>" +
+          pokemon.name.english +
+          "</td>" +
+          "<td>" +
+          pokemon.id +
+          "</td>" +
+          "<td>" +
+          pokemon.type[0] +
+          "</td>" +
+          "<td>" +
+          pokemon.type[1] +
+          "</td>" +
+          "<td>" +
+          pokemon.species +
+          "</td>" +
+          "</tr>";
+      }
+      // Trae los pokemones desde la lista de Github
+      fetch(pokedex)
+        .then((res) => res.json())
+        .then((pokemones) => {
+          preprocessData(pokemones); // Se los pasamos a preprocess
+          console.log("hello pokefriend", pokemones);
+        })
+        .catch((err) => {
+          throw err;
+        });
+    </script>
+  </body>
+</html>
